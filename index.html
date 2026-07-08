@@ -12,6 +12,12 @@
       padding: 0;
     }
 
+    :root {
+      --logo-spin-speed: 14s;
+      --orbit-speed: 5s;
+      --orbit-green: #36ff7a;
+    }
+
     html,
     body {
       width: 100%;
@@ -33,33 +39,142 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      perspective: 1000px;
+      perspective: 450px;
+      perspective-origin: 50% 50%;
       pointer-events: none;
     }
 
-    .logo-wrap {
-      width: 350px;
-      height: 350px;
+    .logo-scene {
+      position: relative;
+      width: min(620px, 94vw, 80vh);
+      aspect-ratio: 1 / 1;
       transform-style: preserve-3d;
     }
 
-    .logo {
+    .logo-anchor {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(350px, 56.5%);
+      aspect-ratio: 1 / 1;
+      transform: translate(-50%, -50%);
+      transform-style: preserve-3d;
+      z-index: 2;
+    }
+
+    .logo-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: turntableSpin var(--logo-spin-speed) linear infinite;
+      will-change: transform;
+    }
+
+    .logo-face {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: contain;
       display: block;
-      animation: turntableSpin 14s linear infinite;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       transform-style: preserve-3d;
-      backface-visibility: visible;
+    }
+
+    .logo-front {
+      transform: translateZ(0.5px);
+    }
+
+    .logo-back {
+      transform: rotateY(180deg) translateZ(0.5px);
     }
 
     @keyframes turntableSpin {
-      0% {
+      from {
         transform: rotateY(0deg);
       }
 
-      100% {
+      to {
         transform: rotateY(360deg);
+      }
+    }
+
+    .orbit-layer {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 74%;
+      aspect-ratio: 1 / 1;
+      transform:
+        translate(-50%, -50%)
+        rotate(-45deg)
+        scaleY(0.38);
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    .orbit-back {
+      z-index: 1;
+      clip-path: inset(0 0 50% 0);
+    }
+
+    .orbit-front {
+      z-index: 3;
+      clip-path: inset(50% 0 0 0);
+    }
+
+    .orbit-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 190deg,
+        rgba(54, 255, 122, 0) 205deg,
+        rgba(54, 255, 122, 0.12) 225deg,
+        rgba(54, 255, 122, 0.38) 250deg,
+        rgba(54, 255, 122, 0.85) 280deg,
+        var(--orbit-green) 305deg,
+        rgba(54, 255, 122, 0.65) 325deg,
+        rgba(54, 255, 122, 0.18) 345deg,
+        transparent 360deg
+      );
+
+      -webkit-mask: radial-gradient(
+        farthest-side,
+        transparent calc(100% - 4px),
+        #000 calc(100% - 3px),
+        #000 calc(100% - 1px),
+        transparent 100%
+      );
+
+      mask: radial-gradient(
+        farthest-side,
+        transparent calc(100% - 4px),
+        #000 calc(100% - 3px),
+        #000 calc(100% - 1px),
+        transparent 100%
+      );
+
+      filter: drop-shadow(
+        0 0 4px rgba(54, 255, 122, 0.25)
+      );
+
+      animation: orbitTravel var(--orbit-speed) linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes orbitTravel {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
       }
     }
 
@@ -71,6 +186,7 @@
       padding: 28px 24px;
       text-align: center;
       background: #ffffff;
+      z-index: 10;
     }
 
     .footer-text {
@@ -80,17 +196,46 @@
       color: #777777;
       font-weight: 500;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo-wrap,
+      .orbit-ring {
+        animation: none;
+      }
+    }
   </style>
 </head>
 
 <body>
+
   <main class="logo-stage">
-    <div class="logo-wrap">
-      <img
-        src="https://www.loganslaboratory.com/3D_Pers.png"
-        alt="Logan's Laboratory Logo"
-        class="logo"
-      />
+    <div class="logo-scene">
+
+      <div class="orbit-layer orbit-back">
+        <div class="orbit-ring"></div>
+      </div>
+
+      <div class="logo-anchor">
+        <div class="logo-wrap">
+          <img
+            src="https://www.loganslaboratory.com/3D_Pers.png"
+            alt="Logan's Laboratory Logo"
+            class="logo-face logo-front"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D_Pers.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-face logo-back"
+          />
+        </div>
+      </div>
+
+      <div class="orbit-layer orbit-front">
+        <div class="orbit-ring"></div>
+      </div>
+
     </div>
   </main>
 
@@ -101,7 +246,9 @@
   </footer>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
   </script>
+
 </body>
 </html>
