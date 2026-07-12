@@ -15,8 +15,6 @@
 
     :root {
       --logo-spin-speed: 4s;
-      --orbit-speed: 2.5s;
-      --orbit-green: #36ff7a;
     }
 
     html,
@@ -24,7 +22,7 @@
       width: 100%;
       min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
-      background: #ffffff;
+      background: #000000;
       color: #111111;
     }
 
@@ -32,6 +30,87 @@
       min-height: 100vh;
       overflow: hidden;
       position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      pointer-events: none;
+
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.035) 0,
+        rgba(255, 255, 255, 0.035) 1px,
+        rgba(0, 0, 0, 0.08) 1px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+
+      opacity: 0.72;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 101;
+      pointer-events: none;
+
+      background: rgba(255, 255, 255, 0.008);
+      opacity: 0.12;
+
+      animation: crtFlicker 4.8s steps(1, end) infinite;
+    }
+
+    @keyframes crtFlicker {
+      0% {
+        opacity: 0.10;
+      }
+
+      8% {
+        opacity: 0.13;
+      }
+
+      9% {
+        opacity: 0.08;
+      }
+
+      18% {
+        opacity: 0.11;
+      }
+
+      32% {
+        opacity: 0.09;
+      }
+
+      33% {
+        opacity: 0.14;
+      }
+
+      34% {
+        opacity: 0.10;
+      }
+
+      51% {
+        opacity: 0.12;
+      }
+
+      67% {
+        opacity: 0.09;
+      }
+
+      68% {
+        opacity: 0.13;
+      }
+
+      82% {
+        opacity: 0.10;
+      }
+
+      100% {
+        opacity: 0.11;
+      }
     }
 
     .logo-stage {
@@ -72,24 +151,91 @@
       will-change: transform;
     }
 
-    .logo-face {
+    .logo-face,
+    .logo-depth {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: contain;
       display: block;
+      transform-style: preserve-3d;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      transform-style: preserve-3d;
     }
 
     .logo-front {
-      transform: translateZ(0.5px);
+      transform: translateZ(4px);
+      filter:
+        drop-shadow(1.5px 0 0 rgba(255, 35, 80, 0.42))
+        drop-shadow(-1.5px 0 0 rgba(0, 210, 255, 0.42));
+    }
+
+    .logo-depth {
+      filter: brightness(0.7);
+    }
+
+    .logo-depth-front-1 {
+      transform: translateZ(3px);
+    }
+
+    .logo-depth-front-2 {
+      transform: translateZ(2px);
+    }
+
+    .logo-depth-front-3 {
+      transform: translateZ(1px);
+    }
+
+    .logo-depth-front-4 {
+      transform: translateZ(0);
+    }
+
+    .logo-depth-front-5 {
+      transform: translateZ(-1px);
+    }
+
+    .logo-depth-front-6 {
+      transform: translateZ(-2px);
+    }
+
+    .logo-depth-front-7 {
+      transform: translateZ(-3px);
+    }
+
+    .logo-depth-back-1 {
+      transform: rotateY(180deg) translateZ(3px);
+    }
+
+    .logo-depth-back-2 {
+      transform: rotateY(180deg) translateZ(2px);
+    }
+
+    .logo-depth-back-3 {
+      transform: rotateY(180deg) translateZ(1px);
+    }
+
+    .logo-depth-back-4 {
+      transform: rotateY(180deg) translateZ(0);
+    }
+
+    .logo-depth-back-5 {
+      transform: rotateY(180deg) translateZ(-1px);
+    }
+
+    .logo-depth-back-6 {
+      transform: rotateY(180deg) translateZ(-2px);
+    }
+
+    .logo-depth-back-7 {
+      transform: rotateY(180deg) translateZ(-3px);
     }
 
     .logo-back {
-      transform: rotateY(180deg) translateZ(0.5px);
+      transform: rotateY(180deg) translateZ(4px);
+      filter:
+        drop-shadow(1.5px 0 0 rgba(255, 35, 80, 0.42))
+        drop-shadow(-1.5px 0 0 rgba(0, 210, 255, 0.42));
     }
 
     @keyframes turntableSpin {
@@ -102,83 +248,6 @@
       }
     }
 
-    .orbit-layer {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 74%;
-      aspect-ratio: 1 / 1;
-      transform:
-        translate(-50%, -50%)
-        rotate(-45deg)
-        scaleY(0.38);
-      transform-origin: center;
-      pointer-events: none;
-    }
-
-    .orbit-back {
-      z-index: 1;
-      clip-path: inset(0 0 50% 0);
-    }
-
-    .orbit-front {
-      z-index: 3;
-      clip-path: inset(50% 0 0 0);
-    }
-
-    .orbit-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        transparent 190deg,
-        rgba(54, 255, 122, 0) 205deg,
-        rgba(54, 255, 122, 0.12) 225deg,
-        rgba(54, 255, 122, 0.38) 250deg,
-        rgba(54, 255, 122, 0.85) 280deg,
-        var(--orbit-green) 305deg,
-        rgba(54, 255, 122, 0.65) 325deg,
-        rgba(54, 255, 122, 0.18) 345deg,
-        transparent 360deg
-      );
-
-      -webkit-mask: radial-gradient(
-        farthest-side,
-        transparent calc(100% - 4px),
-        #000 calc(100% - 3px),
-        #000 calc(100% - 1px),
-        transparent 100%
-      );
-
-      mask: radial-gradient(
-        farthest-side,
-        transparent calc(100% - 4px),
-        #000 calc(100% - 3px),
-        #000 calc(100% - 1px),
-        transparent 100%
-      );
-
-      filter: drop-shadow(
-        0 0 4px rgba(54, 255, 122, 0.25)
-      );
-
-      animation: orbitTravel var(--orbit-speed) linear infinite;
-      will-change: transform;
-    }
-
-    @keyframes orbitTravel {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
     footer {
       position: fixed;
       left: 0;
@@ -186,7 +255,7 @@
       width: 100%;
       padding: 20px 24px;
       text-align: center;
-      background: #ffffff;
+      background: #000000;
       z-index: 10;
     }
 
@@ -200,7 +269,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .logo-wrap,
-      .orbit-ring {
+      body::after {
         animation: none;
       }
     }
@@ -212,12 +281,57 @@
   <main class="logo-stage">
     <div class="logo-scene">
 
-      <div class="orbit-layer orbit-back">
-        <div class="orbit-ring"></div>
-      </div>
-
       <div class="logo-anchor">
         <div class="logo-wrap">
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-7"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-6"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-5"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-4"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-3"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-2"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-front-1"
+          />
 
           <img
             src="https://www.loganslaboratory.com/3D7.png"
@@ -229,14 +343,59 @@
             src="https://www.loganslaboratory.com/3D7.png"
             alt=""
             aria-hidden="true"
+            class="logo-depth logo-depth-back-7"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-back-6"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-back-5"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-back-4"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-back-3"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-back-2"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
+            class="logo-depth logo-depth-back-1"
+          />
+
+          <img
+            src="https://www.loganslaboratory.com/3D7.png"
+            alt=""
+            aria-hidden="true"
             class="logo-face logo-back"
           />
 
         </div>
-      </div>
-
-      <div class="orbit-layer orbit-front">
-        <div class="orbit-ring"></div>
       </div>
 
     </div>
